@@ -18,6 +18,9 @@ mongoose.connect(process.env.DB_URI)
 .catch(err=>console.log('error in connecting to database',err));
 
 app.use(express.json());
+app.get('/',(req, res)=>{
+res.send('this is homee')
+})
 
 app.use('/upload', Uploadrouter);
 app.use('/logs',logrouter);
