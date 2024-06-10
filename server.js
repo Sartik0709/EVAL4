@@ -1,9 +1,9 @@
 import express from 'express';
 import {config} from 'dotenv'
 import mongoose from 'mongoose'
-import Uploadrouter from './routes/uploadRoute.js';
 import router from './routes/logRoute.js';
 import cron from 'node-cron';
+import Uploadrouter from './src/routes/uploadRoute.js';
 // import * as fileService from './src/services/fileService.js';
 // import * as databaseService from './src/services/databaseService.js';
 
@@ -19,7 +19,7 @@ mongoose.connect(process.env.DB_URI)
 
 app.use(express.json());
 
-app.use('/upload',Uploadrouter);
+app.use('/upload', Uploadrouter);
 app.use('/logs',router);
 
  app.listen(Port, () => console.log(`Server is running on port ${Port}`));
