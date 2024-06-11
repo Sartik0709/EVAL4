@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import morgan from 'morgan';
 import { config } from 'dotenv';
+import { Server } from 'socket.io';
 config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,7 +46,6 @@ const app = express();
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// DashBoard for the filter part
 app.get('/', (req, res) => {
     const level = req.query.level ? req.query.level.toUpperCase() : 'INFO';
     const logFilePath = path.join(__dirname, `logs/${level.toLowerCase()}.log`);
@@ -71,7 +71,6 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Function to process data in chunks
 async function processChunks(dataArray, chunkSize) {
     for (let i = 0; i < dataArray.length; i += chunkSize) {
         const chunk = dataArray.slice(i, i + chunkSize);
@@ -95,8 +94,6 @@ async function processChunks(dataArray, chunkSize) {
         await Promise.all(promises);
     }
 }
-
-// Updating data in the MongoDB server
 async function readFileAndUpload() {
     const filePath = path.join(__dirname, "./MOCK_DATA.json");
     if (!fs.existsSync(filePath)) {
@@ -126,7 +123,7 @@ async function readFileAndUpload() {
 }
 
 
-cron.schedule('* * * * *', () => {
+cron.schedule('* * * * * *', () => {
     log('info', 'Running scheduled task');
     readFileAndUpload().catch(err => log('error', `Error in scheduled task: ${err}`));
 });
